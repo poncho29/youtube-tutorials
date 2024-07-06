@@ -1,8 +1,69 @@
+import { useState } from "react";
+
 import { IoTrash, IoPencil  } from "react-icons/io5";
 
-const text = 'Tarea Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolor unde architecto reiciendis, sunt quam quibusdam mollitia accusamus hic assumenda quos qui consequuntur quisquam quod esse quas odio, rerum exercitationem repellat.';
+const todosFakes = [
+  {
+    id: 1,
+    description: 'Sacar a pasear el perro en la tarde',
+    done: false
+  },
+  {
+    id: 2,
+    description: 'Estudiar React y hacer el proyecto de todos usando local storage',
+    done: true
+  }
+];
 
 export const TodoApp = () => {
+  const [todos, setTodos] = useState(todosFakes);
+
+  const [newTodo, setNewTodo] = useState('');
+
+  const [editTodo, setEditTodo] = useState();
+  const [isEditing, setIsEditing] = useState(false);
+
+  const handleAddTodo = (e) => {
+    e.preventDefault();
+
+    if (newTodo.trim() === '') return;
+
+    if (isEditing && editTodo) {
+      const updatedTodos = todos.map((todo) => {
+        if (todo.id === editTodo.id) {
+          return {
+            ...todo,
+            description: newTodo
+          }
+        }
+        return todo;
+      });
+
+      setTodos(updatedTodos);
+      setIsEditing(false);
+      setEditTodo(null);
+      setNewTodo('');
+      return;
+    }
+
+    // Se crea el nuevo TODO con todos los campos requeridos
+    const newTodoComplete = {
+      id: Date.now(),
+      description: newTodo,
+      done: false
+    }
+    
+    setTodos((prevTodos) => [...prevTodos, newTodoComplete]);
+    setNewTodo('');
+  }
+
+  const handleEditTodo = (todo) => {
+    setIsEditing(true);
+    setEditTodo(todo);
+    setNewTodo(todo.description);
+  }
+
+
   return (
     <div
       className="w-full h-full flex flex-col items-center justify-center p-2"
@@ -12,22 +73,23 @@ export const TodoApp = () => {
         <h1 className="text-3xl font-bold text-center mb-4">TODO APP</h1>
 
         {/* Form */}
-        <form>
-          <div className="flex gap-4">
+        <div>
+          <form className="flex gap-4" onSubmit={handleAddTodo}>
             <input
               type="text"
               placeholder="Agregar nueva tarea"
               className="grow px-4 rounded-md focus:outline-blue-500"
+              value={newTodo}
+              onChange={(e) => setNewTodo(e.target.value)}
             />
 
             <button
               type="submit"
               className="text-white font-semibold uppercase py-2 px-4 rounded bg-blue-500 hover:bg-blue-700"
-              onClick={() => {}}
             >
-              Agregar
+              { isEditing ? 'Editar' : 'Agregar' }
             </button>
-          </div>
+          </form>
 
           <hr className="my-4 border-slate-400" />
 
@@ -78,32 +140,36 @@ export const TodoApp = () => {
 
           <ul className="flex flex-col gap-2">
             {/* Item list */}
-            <li
-              className="flex items-center justify-between gap-4 bg-slate-300 p-2 rounded cursor-pointer
-              transition-all duration-300 hover:scale-110 hover:shadow-xl "
-            >
-              <span className="grow">
-                { text.substring(0, 52) }...
-                
-              </span>
+            {todos.map((item) => (
+              <li
+                key={item.id}
+                className="flex items-center justify-between gap-4 bg-slate-300 p-2 rounded cursor-pointer
+                transition-all duration-300 hover:scale-110 hover:shadow-xl "
+              >
+                <span className="grow">
+                  { item.description }
+                  {/* { item.descripton.substring(0, 52) }{ item.descripton.length > 52 ? '...' : '' } */}
+                </span>
 
-              {/* Actions */}
-              <div className="flex gap-2">
-                <button
-                  className="p-1 rounded-md transition-all duration-300 bg-blue-500 hover:bg-blue-700"
-                >
-                  <IoPencil size={20} className="text-white" />
-                </button>
-                <button
-                  className="p-1 rounded-md transition-all duration-300 bg-red-500 hover:bg-red-600"
-                >
-                  <IoTrash size={20} className="text-white" />
-                </button>
-              </div>
-            </li>
+                {/* Actions */}
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => handleEditTodo(item)}
+                    className="p-1 rounded-md transition-all duration-300 bg-blue-500 hover:bg-blue-700"
+                  >
+                    <IoPencil size={20} className="text-white" />
+                  </button>
+                  <button
+                    className="p-1 rounded-md transition-all duration-300 bg-red-500 hover:bg-red-600"
+                  >
+                    <IoTrash size={20} className="text-white" />
+                  </button>
+                </div>
+              </li>
+            ))}
+            
           </ul>
-          
-        </form>
+        </div>
       </section>
     </div>
   )
