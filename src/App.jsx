@@ -1,11 +1,7 @@
-import { RootLayout } from "./layouts"
-
 export const App = () => {
   return (
-    <RootLayout>
-      <p>
-        Cuerpo
-      </p>
-    </RootLayout>
+    <div>
+      <p>Home Page</p>
+    </div>
   )
 }
