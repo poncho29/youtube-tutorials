@@ -1,10 +1,11 @@
+import { RootLayout } from "./layouts"
 
-function App() {
+export const App = () => {
   return (
-    <>
-      <h1 className='text-3xl font-bold underline'>Youtube Tutorials</h1>
-    </>
+    <RootLayout>
+      <p>
+        Cuerpo
+      </p>
+    </RootLayout>
   )
 }
-
-export default App
