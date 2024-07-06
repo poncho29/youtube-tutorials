@@ -12,6 +12,6 @@ Para el desarrollo se usa:
 
 ## Pasos para correr el proyecto
 
-1. Clonar el código desde [aquí]
+1. Clonar el código desde [aquí](https://github.com/poncho29/youtube-tutorials)
 2. Instalar dependencias ```yarn install``` o ```npm install```
 3. Ejecutar en modo desarrollo ```yarn dev``` o ```npm run dev```
