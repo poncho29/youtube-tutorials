@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { IoTrash, IoPencil  } from "react-icons/io5";
 
@@ -8,40 +8,50 @@ const FILTER_STATUS = {
   pending: 'pending',
 }
 
-const todosFakes = [
-  {
-    id: 1,
-    description: 'Sacar a pasear el perro en la tarde',
-    done: false
-  },
-  {
-    id: 2,
-    description: 'Estudiar React y hacer el proyecto de todos usando local storage',
-    done: true
-  },
-  {
-    id: 3,
-    description: 'Comprar el pan para el desayuno',
-    done: false
-  },
-  {
-    id: 4,
-    description: 'Hacer las compras del supermercado',
-    done: false
-  }
-];
+// const todosFakes = [
+//   {
+//     id: 1,
+//     description: 'Sacar a pasear el perro en la tarde',
+//     done: false
+//   },
+//   {
+//     id: 2,
+//     description: 'Estudiar React y hacer el proyecto de todos usando local storage',
+//     done: true
+//   },
+//   {
+//     id: 3,
+//     description: 'Comprar el pan para el desayuno',
+//     done: false
+//   },
+//   {
+//     id: 4,
+//     description: 'Hacer las compras del supermercado',
+//     done: false
+//   },
+//   {
+//     id: 5,
+//     description: 'Ver el partido de la selección',
+//     done: false
+//   }
+// ];
 
 export const TodoApp = () => {
-  const [todos, setTodos] = useState(todosFakes);
+  const [todos, setTodos] = useState([]);
+  const [newTodo, setNewTodo] = useState('');
+  const [editTodo, setEditTodo] = useState();
+  const [isEditing, setIsEditing] = useState(false);
+  const [removingTodo, setRemovingTodo] = useState(null);
   const [filters, setFilters] = useState({
     search: '',
     status: FILTER_STATUS.all,
   });
 
-  const [newTodo, setNewTodo] = useState('');
+  useEffect(() => {
+    const storedTodos = localStorage.getItem('my-todos');
 
-  const [editTodo, setEditTodo] = useState();
-  const [isEditing, setIsEditing] = useState(false);
+    if (storedTodos) setTodos(JSON.parse(storedTodos));
+  }, []);
 
   const handleAddTodo = (e) => {
     e.preventDefault();
@@ -59,6 +69,7 @@ export const TodoApp = () => {
         return todo;
       });
 
+      localStorage.setItem('my-todos', JSON.stringify(updatedTodos));
       setTodos(updatedTodos);
       setIsEditing(false);
       setEditTodo(null);
@@ -66,14 +77,15 @@ export const TodoApp = () => {
       return;
     }
 
-    // Se crea el nuevo TODO con todos los campos requeridos
     const newTodoComplete = {
       id: Date.now(),
       description: newTodo,
       done: false
     }
     
-    setTodos((prevTodos) => [...prevTodos, newTodoComplete]);
+    const newTodos = [newTodoComplete, ...todos];
+    localStorage.setItem('my-todos', JSON.stringify(newTodos));
+    setTodos(newTodos);
     setNewTodo('');
   }
 
@@ -81,6 +93,12 @@ export const TodoApp = () => {
     setIsEditing(true);
     setEditTodo(todo);
     setNewTodo(todo.description);
+  }
+
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+    setEditTodo(null);
+    setNewTodo('');
   }
 
   const handleCompleteTodo = (id) => {
@@ -94,13 +112,20 @@ export const TodoApp = () => {
       return todo;
     });
 
+    localStorage.setItem('my-todos', JSON.stringify(updatedTodos));
     setTodos(updatedTodos);
   }
 
   const handleDeleteTodo = (id) => {
-    const updatedTodos = todos.filter((todo) => todo.id !== id);
+    setRemovingTodo(id);
 
-    setTodos(updatedTodos);
+    setTimeout(() => {
+      const updatedTodos = todos.filter((todo) => todo.id !== id);
+
+      localStorage.setItem('my-todos', JSON.stringify(updatedTodos));
+      setTodos(updatedTodos);
+      setRemovingTodo(null);
+    }, 300);
   };
 
   const todosFiltred = useMemo(() => {
@@ -127,15 +152,15 @@ export const TodoApp = () => {
 
   return (
     <div
-      className="w-full h-full flex flex-col items-center justify-center p-2"
+      className="w-full flex flex-col items-center justify-center p-4 pt-40"
     >
-      <section className="w-[520px] h-auto p-4 rounded-md bg-slate-200 shadow-lg">
+      <section className="w-[520px] h-[528px] p-4 rounded-md bg-slate-200 shadow-lg">
 
         <h1 className="text-3xl font-bold text-center mb-4">TODO APP</h1>
 
         {/* Form */}
         <div>
-          <form className="flex gap-4" onSubmit={handleAddTodo}>
+          <form className="flex gap-3" onSubmit={handleAddTodo}>
             <input
               type="text"
               placeholder="Agregar nueva tarea"
@@ -150,6 +175,15 @@ export const TodoApp = () => {
             >
               { isEditing ? 'Editar' : 'Agregar' }
             </button>
+            { isEditing && (
+              <button
+                type="button"
+                className="text-white font-semibold uppercase py-2 px-4 rounded bg-red-500 hover:bg-red-700"
+                onClick={handleCancelEdit}
+              >
+                Cancelar
+              </button>
+            ) }
           </form>
 
           <hr className="my-4 border-slate-400" />
@@ -212,7 +246,7 @@ export const TodoApp = () => {
             }
           </h2>
 
-          <ul className="flex flex-col gap-2">
+          <ul className="h-52 flex flex-col gap-2 overflow-y-auto">
             {/* Item list */}
             { todosFiltred.length === 0 ? (
               <li className="text-center">No hay tareas</li>
@@ -220,8 +254,11 @@ export const TodoApp = () => {
               todosFiltred.map((item) => (
                 <li
                   key={item.id}
-                  className="flex items-center justify-between gap-4 bg-slate-300 p-2 rounded cursor-pointer
-                  transition-all duration-300 hover:scale-110 hover:shadow-xl"
+                  className={`
+                    flex items-center justify-between gap-4 bg-slate-300 p-2 rounded
+                    cursor-pointer border hover:border-slate-500
+                    ${removingTodo === item.id ?  'animate-fade-out-up' : 'animate-fade-in-up'}
+                  `}
                   onClick={() => handleCompleteTodo(item.id)}
                 >
                   <input
@@ -230,21 +267,27 @@ export const TodoApp = () => {
                     checked={item.done}
                   />
 
-                  <span className={`grow ${item.done ? 'line-throug' : ''}`}>
-                    { item.description.substring(0, 48) }{ item.description.length > 48 ? '...' : '' }
+                  <span className={`grow ${item.done ? 'line-through' : ''}`}>
+                    { item.description }
                   </span>
   
                   {/* Actions */}
                   <div className="flex gap-2">
                     <button
-                      className="p-1 rounded-md transition-all duration-300 bg-blue-500 hover:bg-blue-700"
-                      onClick={() => handleEditTodo(item)}
+                      className="p-1 rounded-md bg-blue-500 hover:bg-blue-700"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleEditTodo(item)
+                      }}
                     >
                       <IoPencil size={20} className="text-white" />
                     </button>
                     <button
-                      className="p-1 rounded-md transition-all duration-300 bg-red-500 hover:bg-red-600"
-                      onClick={() => handleDeleteTodo(item.id)}
+                      className="p-1 rounded-md bg-red-500 hover:bg-red-600"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleDeleteTodo(item.id)
+                      }}
                     >
                       <IoTrash size={20} className="text-white" />
                     </button>
