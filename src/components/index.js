@@ -1,4 +1,5 @@
 // Forms
+export * from './forms/Checkbox';
 export * from './forms/Input';
 export * from './forms/Select';
 

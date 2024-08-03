@@ -2,43 +2,39 @@ import { useState } from "react";
 
 import { Formik } from "formik";
 
-import { ControlButtons, StepOne, StepTwo } from "./components";
+import { getValidationSchema, INITIAL_VALUES } from "./formHelper";
 
-const INITIAL_FORM = {
-  fullname: '',
-  email: '',
-  username: '',
-  phone: '',
-  password: '',
-  confirmPassword: '',
-  country: '',
-  city: '',
-  address: '',
-  zipCode: '',
-  cardNumber: '',
-  cvv: '',
-  expirationDate: '',
-  terms: false,
-  accpetsEmails: false
-}
+import { ControlButtons, StepOne, StepThree, StepTwo } from "./components";
 
 export const StepsForm = () => {
   const [currentStep, setCurrentStep] = useState(1);
+
+  const handleNextStep = (validateForm, setTouched) => {
+    validateForm().then((errors) => {
+      if (Object.keys(errors).length === 0) {
+        setCurrentStep((prevStep) => prevStep + 1);
+      } else {
+        // Marcar todos los campos como tocados para mostrar los errores
+        setTouched(Object.keys(errors).reduce((acc, key) => {
+          acc[key] = true;
+          return acc;
+        }, {}));
+      }
+    });
+  };
 
   return (
     <div
       className="w-full flex flex-col items-center justify-center p-4 pt-10"
     >
       <Formik
-        initialValues={INITIAL_FORM}
-        onSubmit={(values, actions) => {
-          setTimeout(() => {
-            alert(JSON.stringify(values, null, 2));
-            actions.setSubmitting(false);
-          }, 1000);
+        initialValues={INITIAL_VALUES}
+        validationSchema={getValidationSchema(currentStep)}
+        onSubmit={(values) => {
+          console.log(JSON.stringify(values, null, 2))
         }}
       >
-        {({ handleSubmit }) => (
+        {({ isValid, setTouched , handleSubmit, validateForm }) => (
           <form
             className="w-full max-w-lg p-4 rounded-xl bg-slate-200"
             onSubmit={handleSubmit}
@@ -52,9 +48,18 @@ export const StepsForm = () => {
 
             {currentStep === 2 && <StepTwo />}
 
+            {currentStep === 3 && <StepThree />}
+
             <ControlButtons
+              isValid={isValid}
               currentStep={currentStep}
-              onChangeStep={setCurrentStep}
+              onChangeStep={(step) => {
+                if (step < currentStep) {
+                  setCurrentStep(step);
+                } else {
+                  handleNextStep(validateForm, setTouched);
+                }
+              }}
             />
           </form>
         )}
