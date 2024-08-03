@@ -8,34 +8,6 @@ const FILTER_STATUS = {
   pending: 'pending',
 }
 
-// const todosFakes = [
-//   {
-//     id: 1,
-//     description: 'Sacar a pasear el perro en la tarde',
-//     done: false
-//   },
-//   {
-//     id: 2,
-//     description: 'Estudiar React y hacer el proyecto de todos usando local storage',
-//     done: true
-//   },
-//   {
-//     id: 3,
-//     description: 'Comprar el pan para el desayuno',
-//     done: false
-//   },
-//   {
-//     id: 4,
-//     description: 'Hacer las compras del supermercado',
-//     done: false
-//   },
-//   {
-//     id: 5,
-//     description: 'Ver el partido de la selección',
-//     done: false
-//   }
-// ];
-
 export const TodoApp = () => {
   const [todos, setTodos] = useState([]);
   const [newTodo, setNewTodo] = useState('');
@@ -152,7 +124,7 @@ export const TodoApp = () => {
 
   return (
     <div
-      className="w-full flex flex-col items-center justify-center p-4 pt-40"
+      className="w-full flex flex-col items-center justify-center p-4 pt-10"
     >
       <section className="w-[520px] h-[528px] p-4 rounded-md bg-slate-200 shadow-lg">
 

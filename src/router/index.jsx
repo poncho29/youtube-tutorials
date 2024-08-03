@@ -8,7 +8,7 @@ import { App } from "../App";
 import { ErrorPage } from "../ErrorPage";
 
 // Internal Pages 
-import { TodoApp } from "../pages";
+import { StepsForm, TodoApp } from "../pages";
 
 export const router = createBrowserRouter([
   {
@@ -23,6 +23,10 @@ export const router = createBrowserRouter([
       {
         path: "todo-app",
         element: <TodoApp />,
+      },
+      {
+        path: "steps-form",
+        element: <StepsForm />,
       },
     ],
   },
