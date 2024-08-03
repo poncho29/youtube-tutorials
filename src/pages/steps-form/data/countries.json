@@ -1,0 +1,61 @@
+{
+  "countries": [
+    {
+      "name": "Colombia",
+      "code": "CO",
+      "cities": [
+        { "name": "Bogotá", "code": "BOG" },
+        { "name": "Cali", "code": "CAL" },
+        { "name": "Medellín", "code": "MDE" },
+        { "name": "Barranquilla", "code": "BAQ" },
+        { "name": "Cartagena", "code": "CTG" },
+        { "name": "Manizales", "code": "MZL" },
+        { "name": "Bucaramanga", "code": "BGA" }
+      ]
+    },
+    {
+      "name": "Perú",
+      "code": "PE",
+      "cities": [
+        { "name": "Lima", "code": "LIM" },
+        { "name": "Cusco", "code": "CUC" },
+        { "name": "Arequipa", "code": "AQP" },
+        { "name": "Trujillo", "code": "TRU" },
+        { "name": "Piura", "code": "PIU" }
+      ]
+    },
+    {
+      "name": "Venezuela",
+      "code": "VE",
+      "cities": [
+        { "name": "Caracas", "code": "CCS" },
+        { "name": "Maracaibo", "code": "MAR" },
+        { "name": "Valencia", "code": "VLN" },
+        { "name": "Maracay", "code": "MYC" },
+        { "name": "Ciudad Bolívar", "code": "CBL" }
+      ]
+    },
+    {
+      "name": "Argentina",
+      "code": "AR",
+      "cities": [
+        { "name": "Buenos Aires", "code": "BUE" },
+        { "name": "Cordoba", "code": "COR" },
+        { "name": "Rosario", "code": "ROS" },
+        { "name": "San Juan", "code": "SJU" },
+        { "name": "Mendoza", "code": "MDZ" }
+      ]
+    },
+    {
+      "name": "Brasil",
+      "code": "BR",
+      "cities": [
+        { "name": "Brasília", "code": "BSB" },
+        { "name": "São Paulo", "code": "SAO" },
+        { "name": "Rio de Janeiro", "code": "RJ" },
+        { "name": "Fortaleza", "code": "FOR" },
+        { "name": "Salvador", "code": "SSA" }
+      ]
+    }
+  ]
+}

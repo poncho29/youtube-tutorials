@@ -1,5 +1,6 @@
 // Forms
 export * from './forms/Input';
+export * from './forms/Select';
 
 // Icons
 export * from './icons/YouTubeIcon';

@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import { Formik } from "formik";
 
-import { StepOne, StepTwo } from "./components";
+import { ControlButtons, StepOne, StepTwo } from "./components";
 
 const INITIAL_FORM = {
   fullname: '',
@@ -11,8 +11,8 @@ const INITIAL_FORM = {
   phone: '',
   password: '',
   confirmPassword: '',
-  country: undefined,
-  city: undefined,
+  country: '',
+  city: '',
   address: '',
   zipCode: '',
   cardNumber: '',
@@ -38,7 +38,7 @@ export const StepsForm = () => {
           }, 1000);
         }}
       >
-        {({ isValid, handleSubmit }) => (
+        {({ handleSubmit }) => (
           <form
             className="w-full max-w-lg p-4 rounded-xl bg-slate-200"
             onSubmit={handleSubmit}
@@ -52,28 +52,10 @@ export const StepsForm = () => {
 
             {currentStep === 2 && <StepTwo />}
 
-            <section className="w-full flex justify-between gap-4 mt-4">
-              {currentStep > 1 && (
-                <button
-                  type="button"
-                  className="w-full p-2 rounded-md bg-blue-500 text-white hover:bg-blue-600"
-                  onClick={() => setCurrentStep(currentStep - 1)}
-                >
-                  Atras
-                </button>
-              )}
-
-              <button
-                type="button"
-                className={`
-                  w-full p-2 rounded-md bg-blue-500 text-white hover:bg-blue-600
-                  ${isValid && 'opacity-50'}
-                `}
-                onClick={() => setCurrentStep(currentStep + 1)}
-              >
-                Siguiente
-              </button>
-            </section>
+            <ControlButtons
+              currentStep={currentStep}
+              onChangeStep={setCurrentStep}
+            />
           </form>
         )}
       </Formik>
