@@ -1,47 +1,42 @@
 import PropTypes from 'prop-types';
 
+import { Button, Spinner } from '../../../components';
+
 export const ControlButtons = ({
   isValid,
+  isLoading,
   currentStep,
   onChangeStep,
+  onSubmit
 }) => {
-  console.log(isValid)
   return (
     <section className="w-full flex justify-between gap-4 mt-8">
       {currentStep > 1 && (
-        <button
-          type="button"
-          className="w-full p-2 rounded-md bg-blue-500 text-white hover:bg-blue-600"
+        <Button
+          disabled={isLoading}
           onClick={() => onChangeStep(currentStep - 1)}
         >
           Atras
-        </button>
+        </Button>
       )}
 
-      {currentStep < 3 ? (
-        <button
-          type="button"
-          disabled={!isValid}
-          className={`w-full p-2 rounded-md bg-blue-500 text-white hover:bg-blue-600 ${!isValid && 'opacity-50'}`}
-          onClick={() => onChangeStep(currentStep + 1)}
+        <Button
+          disabled={!isValid || isLoading}
+          className="flex justify-center"
+          onClick={() => currentStep < 3 ? onChangeStep(currentStep + 1) : onSubmit()}
         >
-          Siguiente
-        </button>
-      ) : (
-        <button
-          type="submit"
-          disabled={!isValid}
-          className={`w-full p-2 rounded-md bg-blue-500 text-white hover:bg-blue-600 ${!isValid && 'opacity-50'}`}
-        >
-          Enviar
-        </button>
-      )}
+          {currentStep < 3 ? 'Siguiente'
+            : isLoading ? <Spinner /> : 'Enviar'
+          }
+        </Button>
     </section>
   )
 }
 
 ControlButtons.propTypes = {
   isValid: PropTypes.bool.isRequired,
+  isLoading: PropTypes.bool.isRequired,
   currentStep: PropTypes.number.isRequired,
   onChangeStep: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired
 }

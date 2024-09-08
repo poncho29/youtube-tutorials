@@ -228,8 +228,8 @@ export const TodoApp = () => {
                   key={item.id}
                   className={`
                     flex items-center justify-between gap-4 bg-slate-300 p-2 rounded
-                    cursor-pointer border hover:border-slate-500
-                    ${removingTodo === item.id ?  'animate-fade-out-up' : 'animate-fade-in-up'}
+                    cursor-pointer border hover:border-slate-500 animate-duration-200
+                    ${removingTodo === item.id ?  'animate-fade-out' : 'animate-fade-in'}
                   `}
                   onClick={() => handleCompleteTodo(item.id)}
                 >

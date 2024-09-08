@@ -2,25 +2,38 @@ import { useState } from "react";
 
 import { Formik } from "formik";
 
-import { getValidationSchema, INITIAL_VALUES } from "./formHelper";
+import { getValidationSchema, handleErrors, INITIAL_VALUES } from "./formHelper";
 
-import { ControlButtons, StepOne, StepThree, StepTwo } from "./components";
+import { ControlButtons, StepOne, StepTwo, StepThree } from "./components";
 
 export const StepsForm = () => {
   const [currentStep, setCurrentStep] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleNextStep = (validateForm, setTouched) => {
-    validateForm().then((errors) => {
-      if (Object.keys(errors).length === 0) {
-        setCurrentStep((prevStep) => prevStep + 1);
-      } else {
-        // Marcar todos los campos como tocados para mostrar los errores
-        setTouched(Object.keys(errors).reduce((acc, key) => {
-          acc[key] = true;
-          return acc;
-        }, {}));
-      }
-    });
+  /**
+   * Function to change steps in the form
+   * @param { function } validateForm - Formik validation function
+   * @param { function } setTouched - Formik setTouched function
+   * @param { number } step - Form step number
+   * @returns void
+   */
+  const handleChangeStep = async (validateForm, setTouched, step) => {
+    // Return to previous step
+    if (step < currentStep) {
+      setCurrentStep(step);
+      const errors = await validateForm();
+      handleErrors(errors, setTouched);
+      return;
+    }
+
+    const errors = await validateForm();
+  
+    // If there are no errors, proceed to the next step.
+    if (Object.keys(errors).length === 0) {
+      setCurrentStep(step);
+    } else {
+      handleErrors(errors, setTouched);
+    }
   };
 
   return (
@@ -30,15 +43,19 @@ export const StepsForm = () => {
       <Formik
         initialValues={INITIAL_VALUES}
         validationSchema={getValidationSchema(currentStep)}
-        onSubmit={(values) => {
-          console.log(JSON.stringify(values, null, 2))
+        onSubmit={(values, action) => {
+          setIsLoading(true);
+
+          setTimeout(() => {
+            setIsLoading(false);
+            console.log(JSON.stringify(values, null, 2));
+            action.resetForm();
+            setCurrentStep(1);
+          }, 1000);
         }}
       >
         {({ isValid, setTouched , handleSubmit, validateForm }) => (
-          <form
-            className="w-full max-w-lg p-4 rounded-xl bg-slate-200"
-            onSubmit={handleSubmit}
-          >
+          <form className="w-full max-w-lg p-4 rounded-xl bg-slate-200">
 
             <h1 className="text-2xl font-bold text-center uppercase mb-4">
               Formulario de Registro
@@ -52,14 +69,10 @@ export const StepsForm = () => {
 
             <ControlButtons
               isValid={isValid}
+              isLoading={isLoading}
               currentStep={currentStep}
-              onChangeStep={(step) => {
-                if (step < currentStep) {
-                  setCurrentStep(step);
-                } else {
-                  handleNextStep(validateForm, setTouched);
-                }
-              }}
+              onSubmit={handleSubmit}
+              onChangeStep={(step) => handleChangeStep(validateForm, setTouched, step)}
             />
           </form>
         )}

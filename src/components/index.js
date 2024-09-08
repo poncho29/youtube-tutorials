@@ -7,4 +7,6 @@ export * from './forms/Select';
 export * from './icons/YouTubeIcon';
 
 // UI
+export * from './ui/Button';
 export * from './ui/Sidebar';
+export * from './ui/Spinner';

@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useFormikContext } from 'formik';
+
+import { getCitiesByCountry } from '../../../helpers';
 
 import { Input, Select } from '../../../components';
 
@@ -15,6 +17,13 @@ export const StepTwo = () => {
 
   const [cities, setCities] = useState([]);
 
+  useEffect(() => {
+    if (formik.values.country === '') return;
+
+    const selectedCities = getCitiesByCountry(data.countries, formik.values.country);
+    setCities(selectedCities);
+  }, [formik.values.country]);
+
   const handleCountryChange = (e) => {
     const countryCode = e.target.value;
 
@@ -26,57 +35,57 @@ export const StepTwo = () => {
       return;
     }
 
-    const citiesOfSelectedCountry = data.countries.find((country) => country.code === countryCode).cities || [];
-    const selectedCities = citiesOfSelectedCountry.map(country => ({ value: country.code, label: country.name }));
+    const selectedCities = getCitiesByCountry(data.countries, countryCode);
 
     setCities(selectedCities);
   };
 
   return (
-    <section>
+    <section className="animate-fade-in animate-duration-300">
       <Select
-        label="País *"
         name="country"
+        label="País *"
         options={countries}
         value={formik.values.country}
+        error={formik.errors.country}
+        touched={formik.touched.country}
         onChange={handleCountryChange}
         onBlur={formik.handleBlur}
-        touched={formik.touched.country}
-        error={formik.errors.country}
       />
 
       <Select
-        label="Ciudad *"
         name="city"
+        label="Ciudad *"
         options={cities}
         value={formik.values.city}
+        error={formik.errors.city}
+        touched={formik.touched.city}
+        disabled={formik.values.country === ''}
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
-        touched={formik.touched.city}
-        error={formik.errors.city}
-        disabled={formik.values.country === ''}
       />
 
       <Input
-        label="Dirección *"
         name="address"
+        label="Dirección *"
         placeholder="Escriba su dirección"
         value={formik.values.address}
+        error={formik.errors.address}
+        touched={formik.touched.address}
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
-        touched={formik.touched.address}
-        error={formik.errors.address}
       />
       
       <Input
-        label="Código postal *"
         name="zipCode"
+        label="Código postal *"
         placeholder="Escriba su código postal"
+        maxLength={5}
         value={formik.values.zipCode}
+        error={formik.errors.zipCode}
+        touched={formik.touched.zipCode}
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
-        touched={formik.touched.zipCode}
-        error={formik.errors.zipCode}
       />
     </section>
   )
