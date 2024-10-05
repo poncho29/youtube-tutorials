@@ -50,7 +50,8 @@ export const StepsForm = () => {
 
             setTimeout(() => {
               setIsLoading(false);
-              console.log(JSON.stringify(values, null, 2));
+              // console.log(JSON.stringify(values, null, 2));
+              alert(JSON.stringify(values, null, 2));
               action.resetForm();
               setCurrentStep(1);
             }, 1000);
