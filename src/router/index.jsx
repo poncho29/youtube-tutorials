@@ -1,10 +1,10 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 
 // Layouts
 import { RootLayout } from "../layouts";
 
 // Root Pages
-import { App } from "../App";
+// import { App } from "../App";
 import { ErrorPage } from "../ErrorPage";
 
 // Internal Pages 
@@ -18,7 +18,8 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <App />,
+        element: <Navigate to="/todo-app" />,
+        // element: <App />,
       },
       {
         path: "todo-app",

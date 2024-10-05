@@ -5,6 +5,7 @@ import { Formik } from "formik";
 import { getValidationSchema, handleErrors, INITIAL_VALUES } from "./formHelper";
 
 import { ControlButtons, StepOne, StepTwo, StepThree } from "./components";
+import { PageWrapper } from "../../components";
 
 export const StepsForm = () => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -37,46 +38,48 @@ export const StepsForm = () => {
   };
 
   return (
-    <div
-      className="w-full flex flex-col items-center justify-center p-4 pt-10"
-    >
-      <Formik
-        initialValues={INITIAL_VALUES}
-        validationSchema={getValidationSchema(currentStep)}
-        onSubmit={(values, action) => {
-          setIsLoading(true);
-
-          setTimeout(() => {
-            setIsLoading(false);
-            console.log(JSON.stringify(values, null, 2));
-            action.resetForm();
-            setCurrentStep(1);
-          }, 1000);
-        }}
+    <PageWrapper>
+      <div
+        className="w-full flex flex-col items-center justify-center p-4 pt-10"
       >
-        {({ isValid, setTouched , handleSubmit, validateForm }) => (
-          <form className="w-full max-w-lg p-4 rounded-xl bg-slate-200">
+        <Formik
+          initialValues={INITIAL_VALUES}
+          validationSchema={getValidationSchema(currentStep)}
+          onSubmit={(values, action) => {
+            setIsLoading(true);
 
-            <h1 className="text-2xl font-bold text-center uppercase mb-4">
-              Formulario de Registro
-            </h1>
+            setTimeout(() => {
+              setIsLoading(false);
+              console.log(JSON.stringify(values, null, 2));
+              action.resetForm();
+              setCurrentStep(1);
+            }, 1000);
+          }}
+        >
+          {({ isValid, setTouched , handleSubmit, validateForm }) => (
+            <form className="w-full max-w-lg p-4 rounded-xl bg-slate-200">
 
-            {currentStep === 1 && <StepOne />}
+              <h1 className="text-2xl font-bold text-center uppercase mb-4">
+                Formulario de Registro
+              </h1>
 
-            {currentStep === 2 && <StepTwo />}
+              {currentStep === 1 && <StepOne />}
 
-            {currentStep === 3 && <StepThree />}
+              {currentStep === 2 && <StepTwo />}
 
-            <ControlButtons
-              isValid={isValid}
-              isLoading={isLoading}
-              currentStep={currentStep}
-              onSubmit={handleSubmit}
-              onChangeStep={(step) => handleChangeStep(validateForm, setTouched, step)}
-            />
-          </form>
-        )}
-      </Formik>
-    </div>
+              {currentStep === 3 && <StepThree />}
+
+              <ControlButtons
+                isValid={isValid}
+                isLoading={isLoading}
+                currentStep={currentStep}
+                onSubmit={handleSubmit}
+                onChangeStep={(step) => handleChangeStep(validateForm, setTouched, step)}
+              />
+            </form>
+          )}
+        </Formik>
+      </div>
+    </PageWrapper>
   )
 }

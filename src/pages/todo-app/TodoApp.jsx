@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { FILTER_STATUS } from "./utils";
 
 import { FormAddTodo, ListTodos, TodoFilters } from "./components";
+import { PageWrapper } from "../../components";
 
 export const TodoApp = () => {
   const [todos, setTodos] = useState([]);
@@ -143,41 +144,43 @@ export const TodoApp = () => {
   }, [todos, filters]);
 
   return (
-    <div
-      className="w-full flex flex-col items-center justify-center p-4 pt-10"
-    >
-      <section className="w-[520px] h-[528px] p-4 rounded-md bg-slate-200 shadow-lg">
-        <h1 className="text-3xl font-bold text-center mb-4">TODO APP</h1>
+    <PageWrapper>
+      <div
+        className="w-full flex flex-col items-center justify-center px-4 py-10"
+      >
+        <section className="w-full h-full max-h-[728px] p-4 rounded-md bg-slate-200 shadow-lg sm:w-[520px] sm:h-[528px]">
+          <h1 className="text-3xl font-bold text-center mb-4">TODO APP</h1>
 
-        {/* Form */}
-        <div>
-          <FormAddTodo
-            value={newTodo}
-            isEditing={isEditing}
-            onChange={setNewTodo}
-            onCancelEdit={handleCancelEdit}
-            onSubmit={handleAddTodo}
-          />
+          {/* Form */}
+          <div>
+            <FormAddTodo
+              value={newTodo}
+              isEditing={isEditing}
+              onChange={setNewTodo}
+              onCancelEdit={handleCancelEdit}
+              onSubmit={handleAddTodo}
+            />
 
-          <hr className="my-4 border-slate-400" />
+            <hr className="my-4 border-slate-400" />
 
-          <TodoFilters
-            filters={filters}
-            onChangeFilters={setFilters}
-          />
+            <TodoFilters
+              filters={filters}
+              onChangeFilters={setFilters}
+            />
 
-          <hr className="my-4 border-slate-400" />
+            <hr className="my-4 border-slate-400" />
 
-          <ListTodos
-            todos={todosFiltred}
-            removingTodo={removingTodo}
-            filters={filters}
-            onEditTodo={handleEditTodo}
-            onDeleteTodo={handleDeleteTodo}
-            onCompleteTodo={handleCompleteTodo}
-          />
-        </div>
-      </section>
-    </div>
+            <ListTodos
+              todos={todosFiltred}
+              removingTodo={removingTodo}
+              filters={filters}
+              onEditTodo={handleEditTodo}
+              onDeleteTodo={handleDeleteTodo}
+              onCompleteTodo={handleCompleteTodo}
+            />
+          </div>
+        </section>
+      </div>
+    </PageWrapper>
   )
 }

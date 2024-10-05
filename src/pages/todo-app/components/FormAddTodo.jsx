@@ -10,25 +10,25 @@ export const FormAddTodo = ({
   onSubmit,
 }) => {
   return (
-    <form className="flex gap-3" onSubmit={onSubmit}>
+    <form className="flex flex-wrap gap-3 md:flex-nowrap" onSubmit={onSubmit}>
       <input
         type="text"
         placeholder="Agregar nueva tarea"
-        className="grow px-4 rounded-md focus:outline-blue-500"
+        className="h-10 grow px-4 rounded-md focus:outline-blue-500"
         value={value}
         onChange={(e) => onChange(e.target.value)}
       />
 
       <Button
         type="submit"
-        className="w-32 font-semibold uppercase"
+        className="font-semibold uppercase md:w-28"
       >
         { isEditing ? 'Editar' : 'Agregar' }
       </Button>
       { isEditing && (
         <Button
           type="button"
-          className="uppercase bg-red-500 hover:bg-red-700"
+          className="font-semibold uppercase bg-red-500 hover:bg-red-700 md:w-28 "
           onClick={onCancelEdit}
         >
           Cancelar

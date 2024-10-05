@@ -19,7 +19,7 @@ export const TodoFilters = ({
       />
 
       <div
-        className="flex justify-between gap-2"
+        className="flex flex-wrap justify-between gap-2 sm:flex-nowrap"
       >
         <Button
           className="font-semibold uppercase"
