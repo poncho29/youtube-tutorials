@@ -54,7 +54,7 @@ export const Sidebar = () => {
       
       <hr className='w-full my-4' />
 
-      <a
+      {/* <a
         href='https://www.youtube.com/channel/UCq7JQtygCHQW3b0SWru1XzA'
         target='_blank'
         rel='noreferrer'
@@ -62,7 +62,7 @@ export const Sidebar = () => {
       >
         <h2 className='text-2xl font-bold uppercase'>Sígueme</h2>
         <YouTubeIcon className="w-6 h-6" />
-      </a>
+      </a> */}
     </div>
   )
 }
